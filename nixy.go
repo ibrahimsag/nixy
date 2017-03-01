@@ -50,6 +50,7 @@ type Config struct {
 	Nginx_config   string   `json:"-"`
 	Nginx_template string   `json:"-"`
 	Nginx_cmd      string   `json:"-"`
+	Nginx_pid_file string   `json:"-"`
 	Statsd         StatsdConfig
 	LastUpdates    Updates
 	Apps           map[string]App

@@ -16,6 +16,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
+  "syscall"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -393,12 +394,22 @@ func checkConf(path string) error {
 }
 
 func reloadNginx() error {
-	cmd := exec.Command(config.Nginx_cmd, "-s", "reload")
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	err := cmd.Run() // will wait for command to return
+	d, err := ioutil.ReadFile(config.Nginx_pid_file)
 	if err != nil {
-		msg := fmt.Sprint(err) + ": " + stderr.String()
+		msg := fmt.Sprint(err)
+		errstd := errors.New(msg)
+		return errstd
+	}
+
+	pid, err := strconv.Atoi(string(bytes.TrimSpace(d)))
+	if err != nil {
+		msg := fmt.Errorf("error parsing pid from %s: %s", config.Nginx_pid_file, err)
+	}
+
+
+  err := syscall.Kill (pid,syscall.SIGHUP)
+	if err != nil {
+		msg := "failed to signal nginx reload: " + fmt.Sprint(err)
 		errstd := errors.New(msg)
 		return errstd
 	}
