@@ -407,13 +407,7 @@ func reloadNginx() error {
 		msg := fmt.Errorf("error parsing pid from %s: %s", config.Nginx_pid_file, err)
 	}
 
-
-  err := syscall.Kill (pid,syscall.SIGHUP)
-	if err != nil {
-		msg := "failed to signal nginx reload: " + fmt.Sprint(err)
-		errstd := errors.New(msg)
-		return errstd
-	}
+  syscall.Kill (pid,syscall.SIGHUP)
 	return nil
 }
 
