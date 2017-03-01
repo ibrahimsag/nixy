@@ -409,7 +409,7 @@ func reloadNginx() error {
 	}
 
   syscall.Kill (pid,syscall.SIGHUP)
-  logger.Warn("send signal to " + string(pid))
+  logger.Warn("send signal to " + pid)
 	return nil
 }
 
