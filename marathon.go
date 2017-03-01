@@ -405,6 +405,8 @@ func reloadNginx() error {
 	pid, err := strconv.Atoi(string(bytes.TrimSpace(d)))
 	if err != nil {
 		msg := fmt.Errorf("error parsing pid from %s: %s", config.Nginx_pid_file, err)
+		errstd := errors.New(msg)
+		return errstd
 	}
 
   syscall.Kill (pid,syscall.SIGHUP)
